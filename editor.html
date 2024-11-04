@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Texto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header class="header"> 
+        <div class="logo">
+            <img src="icono.png" alt="Icono">
+        </div>   
+        <button class="btn-pdf" onclick="generatePDF()">Guardar como PDF</button>
+    </header>
+    <div class="text">
+        <h1>tu editor de texto favorito</h1>
+    </div>
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Buscar palabra..." class="styled-input">
+            <button onclick="highlightWord()" class="search-button">Buscar</button>
+        </div>
+        <div class="editor" data-placeholder="Escribe tu texto aqui..." contenteditable="true"> </div>
+    </div>
+    
+    <script src="script.js"></script> 
+</body>
+</html>
+
