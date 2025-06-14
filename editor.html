@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor de Texto</title>
+    <title>Editor de Texto </title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -12,17 +13,49 @@
         <div class="logo">
             <img src="icono.png" alt="Icono">
         </div>   
-        <button class="btn-pdf" onclick="generatePDF()">Guardar como PDF</button>
+        <div class="header-buttons">
+            <button class="btn-pdf" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> Guardar como PDF</button>
+            <button class="btn-save" onclick="saveDocument()"><i class="fas fa-save"></i> Guardar</button>
+        </div>
     </header>
     <div class="text">
-        <h1>tu editor de texto favorito</h1>
+        <h1>Editor de Texto </h1>
     </div>
     <div class="container">
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button onclick="formatText('bold')" title="Negrita"><i class="fas fa-bold"></i></button>
+                <button onclick="formatText('italic')" title="Cursiva"><i class="fas fa-italic"></i></button>
+                <button onclick="formatText('underline')" title="Subrayado"><i class="fas fa-underline"></i></button>
+            </div>
+            <div class="toolbar-group">
+                <select onchange="changeFont(this.value)" title="Fuente">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                </select>
+                <select onchange="changeFontSize(this.value)" title="Tamaño">
+                    <option value="1">Pequeño</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="5">Grande</option>
+                    <option value="7">Muy grande</option>
+                </select>
+            </div>
+            <div class="toolbar-group">
+                <button onclick="alignText('left')" title="Alinear izquierda"><i class="fas fa-align-left"></i></button>
+                <button onclick="alignText('center')" title="Alinear centro"><i class="fas fa-align-center"></i></button>
+                <button onclick="alignText('right')" title="Alinear derecha"><i class="fas fa-align-right"></i></button>
+            </div>
+        </div>
         <div class="search-container">
             <input type="text" id="search" placeholder="Buscar palabra..." class="styled-input">
-            <button onclick="highlightWord()" class="search-button">Buscar</button>
+            <button onclick="highlightWord()" class="search-button"><i class="fas fa-search"></i> Buscar</button>
         </div>
-        <div class="editor" data-placeholder="Escribe tu texto aqui..." contenteditable="true"> </div>
+        <div class="editor" data-placeholder="Escribe tu texto aqui..." contenteditable="true"></div>
+        <div class="editor-stats">
+            <span id="wordCount">Palabras: 0</span>
+            <span id="charCount">Caracteres: 0</span>
+        </div>
     </div>
     
     <script src="script.js"></script> 
