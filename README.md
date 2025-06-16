@@ -10,8 +10,8 @@ Este proyecto es un **editor de texto interactivo y funcional** que incluye herr
 - 🔤 **Traducción automática** usando la API de [MyMemory](https://mymemory.translated.net/)
 - 🖋️ Estilos: **negrita**, *cursiva*, **cambio de tamaño de letra**
 - 📤 Exportar como archivo PDF
-- 🌙 Modo claro y oscuro *(opcional para futuras versiones)*
-
+- 🌙 Resalta la palabra buscada en el texto
+- 
 ---
 
 ## 🚀 Tecnologías utilizadas
@@ -25,12 +25,8 @@ Este proyecto es un **editor de texto interactivo y funcional** que incluye herr
 ## 📸 Capturas
 
 ### 💻 Vista general del editor
-![Vista del editor](https://tu-imagen-ejemplo.com/editor1.png)
+![Vista del editor](image.png)
 
-### 📤 Exportación a PDF
-![Descarga PDF](https://tu-imagen-ejemplo.com/pdf-preview.png)
-
-> *Reemplaza las URLs con tus capturas reales.*
 
 ---
 

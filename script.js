@@ -58,7 +58,6 @@ function generarPDF() {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = contenidoEditor;
 
-    // Remover etiquetas HTML y tomar solo el texto
     const textoContenido = tempDiv.innerText || tempDiv.textContent;
 
     // Configurar el PDF
