@@ -1,75 +1,87 @@
-function formatText(command) {
-    document.execCommand(command, false, null);
+function formatearTexto(comando) {
+    document.execCommand(comando, false, null);
 }
 
-function changeFont(font) {
-    document.execCommand('fontName', false, font);
+function cambiarFuente(fuente) {
+    document.execCommand('fontName', false, fuente);
 }
 
-function changeFontSize(size) {
-    document.execCommand('fontSize', false, size);
+function cambiarTamanoFuente(tamano) {
+    document.execCommand('fontSize', false, tamano);
 }
 
-function alignText(alignment) {
-    document.execCommand(alignment, false, null);
+function alinearTexto(alineacion) {
+    document.execCommand(alineacion, false, null);
 }
 
 // Función de búsqueda mejorada
-function highlightWord() {
-    const word = document.getElementById('search').value;
-    if (!word) return;
+function resaltarPalabra() {
+    const palabra = document.getElementById('buscar')?.value;
+    if (!palabra) return;
 
     const editor = document.querySelector('.editor');
-    const content = editor.innerHTML;
+    if (!editor) return;
+
+    const contenido = editor.innerHTML;
     
     // Remover resaltados anteriores
-    const oldHighlights = editor.getElementsByClassName('highlight');
-    while (oldHighlights.length > 0) {
-        const parent = oldHighlights[0].parentNode;
-        parent.replaceChild(document.createTextNode(oldHighlights[0].textContent), oldHighlights[0]);
-        parent.normalize();
+    const resaltadosAnteriores = editor.getElementsByClassName('highlight');
+    while (resaltadosAnteriores.length > 0) {
+        const padre = resaltadosAnteriores[0].parentNode;
+        padre.replaceChild(document.createTextNode(resaltadosAnteriores[0].textContent), resaltadosAnteriores[0]);
+        padre.normalize();
     }
 
-    const regex = new RegExp(`(${word})`, 'gi');
-    const newContent = content.replace(regex, '<span class="highlight">$1</span>');
+    const regex = new RegExp(`(${palabra})`, 'gi');
+    const nuevoContenido = contenido.replace(regex, '<span class="highlight">$1</span>');
 
-    if (content === newContent) {
+    if (contenido === nuevoContenido) {
         alert("No se encontró esta palabra");
     } else {
-        editor.innerHTML = newContent;
+        editor.innerHTML = nuevoContenido;
     }
 }
 
 // Función para generar PDF
-function generatePDF() {
+function generarPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    if (!jsPDF) {
+        alert('Error: La biblioteca PDF no está cargada correctamente');
+        return;
+    }
 
-    const editorContent = document.querySelector('.editor').innerHTML;
+    const editor = document.querySelector('.editor');
+    if (!editor) return;
+
+    const doc = new jsPDF();
+    const contenidoEditor = editor.innerHTML;
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = editorContent;
+    tempDiv.innerHTML = contenidoEditor;
 
     // Remover etiquetas HTML y tomar solo el texto
-    const textContent = tempDiv.innerText || tempDiv.textContent;
+    const textoContenido = tempDiv.innerText || tempDiv.textContent;
 
     // Configurar el PDF
     doc.setFont("helvetica");
     doc.setFontSize(12);
     
     // Dividir el texto en líneas para que quepa en el PDF
-    const splitText = doc.splitTextToSize(textContent, 180);
+    const textoDividido = doc.splitTextToSize(textoContenido, 180);
     
     // Agregar el texto al PDF
-    doc.text(splitText, 10, 10);
+    doc.text(textoDividido, 10, 10);
     
     // Guardar el PDF
     doc.save('documento.pdf');
 }
 
 // Función para guardar el documento
-function saveDocument() {
-    const content = document.querySelector('.editor').innerHTML;
-    const blob = new Blob([content], { type: 'text/html' });
+function guardarDocumento() {
+    const editor = document.querySelector('.editor');
+    if (!editor) return;
+
+    const contenido = editor.innerHTML;
+    const blob = new Blob([contenido], { type: 'text/html' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -79,33 +91,168 @@ function saveDocument() {
 }
 
 // Contador de palabras y caracteres
-function updateStats() {
+function actualizarEstadisticas() {
     const editor = document.querySelector('.editor');
-    const text = editor.innerText || editor.textContent;
-    const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-    const chars = text.length;
+    const contadorPalabras = document.getElementById('contadorPalabras');
+    const contadorCaracteres = document.getElementById('contadorCaracteres');
 
-    document.getElementById('wordCount').textContent = `Palabras: ${words.length}`;
-    document.getElementById('charCount').textContent = `Caracteres: ${chars}`;
+    if (!editor || !contadorPalabras || !contadorCaracteres) return;
+
+    const texto = editor.innerText || editor.textContent;
+    const palabras = texto.trim().split(/\s+/).filter(palabra => palabra.length > 0);
+    const caracteres = texto.length;
+
+    contadorPalabras.textContent = `Palabras: ${palabras.length}`;
+    contadorCaracteres.textContent = `Caracteres: ${caracteres}`;
+}
+
+// Función para detectar el idioma
+async function detectarIdioma(texto) {
+    try {
+        // Intentar detectar el idioma usando un par de idiomas común
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=es|en`;
+        const respuesta = await fetch(url);
+        if (!respuesta.ok) {
+            return 'es'; 
+        }
+        const datos = await respuesta.json();
+        
+        // Verifica si la API detectó el idioma
+        if (datos.responseData && datos.responseData.detectedLanguage) {
+            return datos.responseData.detectedLanguage.language;
+        }
+        
+        // Si no se pudo detectar, intentar con otro par de idiomas
+        const url2 = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`;
+        const respuesta2 = await fetch(url2);
+        if (!respuesta2.ok) {
+            return 'es';
+        }
+        const datos2 = await respuesta2.json();
+        
+        if (datos2.responseData && datos2.responseData.detectedLanguage) {
+            return datos2.responseData.detectedLanguage.language;
+        }
+        
+        // Si aún no se pudo detectar, usar el idioma de destino como origen
+        const idiomaDestino = document.getElementById('idiomaDestino').value;
+        return idiomaDestino === 'es' ? 'en' : 'es';
+    } catch (error) {
+        console.error('Error al detectar idioma:', error);
+        // Si hay error, usar el idioma opuesto al destino
+        const idiomaDestino = document.getElementById('idiomaDestino').value;
+        return idiomaDestino === 'es' ? 'en' : 'es';
+    }
+}
+
+// Función para traducir el texto
+async function traducirTexto() {
+    const editor = document.querySelector('.editor');
+    const idiomaDestino = document.getElementById('idiomaDestino');
+    const botonTraducir = document.querySelector('.translate-btn');
+
+    if (!editor || !idiomaDestino || !botonTraducir) {
+        alert('Error: No se pudieron encontrar los elementos necesarios');
+        return;
+    }
+
+    const texto = editor.innerText || editor.textContent;
+    if (!texto.trim()) {
+        alert('Por favor, escribe algo para traducir');
+        return;
+    }
+
+    try {
+        // Mostrar estado de carga
+        botonTraducir.classList.add('translating');
+        botonTraducir.disabled = true;
+
+        // Guardar el texto original
+        const textoOriginal = editor.innerHTML;
+        localStorage.setItem('ultimoTextoOriginal', textoOriginal);
+
+        // Detectar el idioma de origen
+        const idiomaOrigen = await detectarIdioma(texto);
+
+        // Dividir el texto en partes más pequeñas si es necesario (la API tiene un límite)
+        const maxLength = 500;
+        const partes = [];
+        for (let i = 0; i < texto.length; i += maxLength) {
+            partes.push(texto.slice(i, i + maxLength));
+        }
+
+        // Traducir cada parte
+        const traducciones = await Promise.all(
+            partes.map(async (parte) => {
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(parte)}&langpair=${idiomaOrigen}|${idiomaDestino.value}`;
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) {
+                    throw new Error('Error en la traducción');
+                }
+                const datos = await respuesta.json();
+                return datos.responseData.translatedText;
+            })
+        );
+
+        // Unir las traducciones
+        const textoTraducido = traducciones.join(' ');
+
+        // Actualizar el editor con el texto traducido
+        editor.innerHTML = textoTraducido;
+        actualizarEstadisticas();
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al traducir el texto. Por favor, intenta de nuevo.');
+        // Restaurar el texto original en caso de error
+        const textoOriginal = localStorage.getItem('ultimoTextoOriginal');
+        if (textoOriginal) {
+            editor.innerHTML = textoOriginal;
+        }
+    } finally {
+        // Restaurar el botón
+        botonTraducir.classList.remove('translating');
+        botonTraducir.disabled = false;
+    }
+}
+
+// Función para restaurar el texto original
+function restaurarTextoOriginal() {
+    const editor = document.querySelector('.editor');
+    if (!editor) return;
+
+    const textoOriginal = localStorage.getItem('ultimoTextoOriginal');
+    if (textoOriginal) {
+        editor.innerHTML = textoOriginal;
+        actualizarEstadisticas();
+    }
 }
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     const editor = document.querySelector('.editor');
+    if (!editor) return;
     
     // Actualizar estadísticas mientras se escribe
-    editor.addEventListener('input', updateStats);
+    editor.addEventListener('input', actualizarEstadisticas);
     
     // Autoguardado cada 30 segundos
-    let autoSaveInterval = setInterval(() => {
-        const content = editor.innerHTML;
-        localStorage.setItem('editorContent', content);
+    let intervaloAutoguardado = setInterval(() => {
+        const contenido = editor.innerHTML;
+        localStorage.setItem('contenidoEditor', contenido);
     }, 30000);
 
     // Cargar contenido guardado si existe
-    const savedContent = localStorage.getItem('editorContent');
-    if (savedContent) {
-        editor.innerHTML = savedContent;
-        updateStats();
+    const contenidoGuardado = localStorage.getItem('contenidoEditor');
+    if (contenidoGuardado) {
+        editor.innerHTML = contenidoGuardado;
+        actualizarEstadisticas();
     }
+
+    // Agregar atajo de teclado para restaurar texto original (Ctrl + Z)
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'z') {
+            restaurarTextoOriginal();
+        }
+    });
 });

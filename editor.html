@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor de Texto </title>
+    <title>Editor de Texto</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -14,27 +14,27 @@
             <img src="icono.png" alt="Icono">
         </div>   
         <div class="header-buttons">
-            <button class="btn-pdf" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> Guardar como PDF</button>
-            <button class="btn-save" onclick="saveDocument()"><i class="fas fa-save"></i> Guardar</button>
+            <button class="btn-pdf" onclick="generarPDF()"><i class="fas fa-file-pdf"></i> Guardar como PDF</button>
+            <button class="btn-save" onclick="guardarDocumento()"><i class="fas fa-save"></i> Guardar</button>
         </div>
     </header>
     <div class="text">
-        <h1>Editor de Texto </h1>
+        <h1>Editor de Texto</h1>
     </div>
     <div class="container">
         <div class="toolbar">
             <div class="toolbar-group">
-                <button onclick="formatText('bold')" title="Negrita"><i class="fas fa-bold"></i></button>
-                <button onclick="formatText('italic')" title="Cursiva"><i class="fas fa-italic"></i></button>
-                <button onclick="formatText('underline')" title="Subrayado"><i class="fas fa-underline"></i></button>
+                <button onclick="formatearTexto('bold')" title="Negrita"><i class="fas fa-bold"></i></button>
+                <button onclick="formatearTexto('italic')" title="Cursiva"><i class="fas fa-italic"></i></button>
+                <button onclick="formatearTexto('underline')" title="Subrayado"><i class="fas fa-underline"></i></button>
             </div>
             <div class="toolbar-group">
-                <select onchange="changeFont(this.value)" title="Fuente">
+                <select onchange="cambiarFuente(this.value)" title="Fuente">
                     <option value="Arial">Arial</option>
                     <option value="Times New Roman">Times New Roman</option>
                     <option value="Courier New">Courier New</option>
                 </select>
-                <select onchange="changeFontSize(this.value)" title="Tamaño">
+                <select onchange="cambiarTamanoFuente(this.value)" title="Tamaño">
                     <option value="1">Pequeño</option>
                     <option value="3" selected>Normal</option>
                     <option value="5">Grande</option>
@@ -42,19 +42,34 @@
                 </select>
             </div>
             <div class="toolbar-group">
-                <button onclick="alignText('left')" title="Alinear izquierda"><i class="fas fa-align-left"></i></button>
-                <button onclick="alignText('center')" title="Alinear centro"><i class="fas fa-align-center"></i></button>
-                <button onclick="alignText('right')" title="Alinear derecha"><i class="fas fa-align-right"></i></button>
+                <button onclick="alinearTexto('left')" title="Alinear izquierda"><i class="fas fa-align-left"></i></button>
+                <button onclick="alinearTexto('center')" title="Alinear centro"><i class="fas fa-align-center"></i></button>
+                <button onclick="alinearTexto('right')" title="Alinear derecha"><i class="fas fa-align-right"></i></button>
+            </div>
+            <div class="toolbar-group translation-group">
+                <select id="idiomaDestino" title="Idioma de destino">
+                    <option value="en">Inglés</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Francés</option>
+                    <option value="de">Alemán</option>
+                    <option value="it">Italiano</option>
+                    <option value="pt">Portugués</option>
+                    <option value="ru">Ruso</option>
+                    <option value="ja">Japonés</option>
+                    <option value="ko">Coreano</option>
+                    <option value="zh">Chino</option>
+                </select>
+                <button onclick="traducirTexto()" class="translate-btn" title="Traducir texto"><i class="fas fa-language"></i> Traducir</button>
             </div>
         </div>
         <div class="search-container">
-            <input type="text" id="search" placeholder="Buscar palabra..." class="styled-input">
-            <button onclick="highlightWord()" class="search-button"><i class="fas fa-search"></i> Buscar</button>
+            <input type="text" id="buscar" placeholder="Buscar palabra..." class="styled-input">
+            <button onclick="resaltarPalabra()" class="search-button"><i class="fas fa-search"></i> Buscar</button>
         </div>
-        <div class="editor" data-placeholder="Escribe tu texto aqui..." contenteditable="true"></div>
+        <div class="editor" data-placeholder="Escribe tu texto aquí..." contenteditable="true"></div>
         <div class="editor-stats">
-            <span id="wordCount">Palabras: 0</span>
-            <span id="charCount">Caracteres: 0</span>
+            <span id="contadorPalabras">Palabras: 0</span>
+            <span id="contadorCaracteres">Caracteres: 0</span>
         </div>
     </div>
     

@@ -194,3 +194,64 @@ body {
     color: #999;
     font-style: italic;
 }
+
+.translation-group {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.translation-group select {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+/* .translate-btn {
+    background-color: #115993;
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+} */
+
+.translate-btn:hover {
+    background-color: #077cf2;
+}
+
+.translate-btn i {
+    font-size: 16px;
+}
+
+.translating {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.translating::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-left: 5px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
